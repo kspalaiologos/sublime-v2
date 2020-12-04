@@ -2,12 +2,14 @@
 // Copyleft (C) Kamila Szewczyk, 2020.
 // All wrongs reserved.
 
-import Discord from 'discord.js'
+import Discord, { ShardingManager } from 'discord.js'
 import chalk from 'chalk'
 import fs from 'fs'
 import levenshtein from 'js-levenshtein'
 import temp from 'temp'
 import child from 'child_process'
+import { manual } from './mnemonics';
+import { maxHeaderSize } from 'http'
 
 const client = new Discord.Client()
 
@@ -66,7 +68,7 @@ const escape_backticks = (str:string) =>
 
 // Return first code block found in the message.
 const extract_code = (msg:Discord.Message) =>
-    msg.content.match(/```[a-z]*\n([\s\S]*?)\n```/s)
+    msg.content.match(/(?:```[a-z]*\n([\s\S]*?)\n```)|(?:`([\s\S]*?)`)/s)
 
 // Strip pings from a message.
 const strip_tags = (str:string) =>
@@ -75,7 +77,7 @@ const strip_tags = (str:string) =>
 // Strip code blocks from a message.
 // This, intentionally, uses a greedy match, which will yeet all the blocks at once.
 const strip_code = (str:string) =>
-    str.replace(/```.*```/s, '')
+    str.replace(/```.*```/s, '').replace(/`.*`/s, '')
 
 // Compile asm2bf code to brainfuck.
 // callback statuses:
@@ -195,6 +197,23 @@ const run_asm2bf = (msg:Discord.Message, c?:string) =>
                 : run_brainfuck(msg, code)
     )
 
+const about = (msg:Discord.Message, c?:string) => {
+    const lookup = (c as string).toLocaleLowerCase();
+
+    const table = manual
+        .map(x => [ levenshtein(x.name, lookup), x.data ])
+        .sort((x, y) => y[0] as number - (x[0] as number))
+        .pop()
+
+    // command recognition threshold.
+    if(table![0] as number > botConfig.command_threshold) {
+        msg.reply('no clue.')
+        return
+    }
+
+    msg.channel.send(table![1] as string);
+}
+
 // a tiny 'tutorial' embed.
 const tutorial = (msg:Discord.Message) =>
     msg.channel.send(
@@ -238,7 +257,11 @@ const commands = [
 
     {'names': [
         'help', 'tutorial'],
-    'proc': tutorial}
+    'proc': tutorial},
+
+    {'names': [
+        'whats', 'tell me about', 'how to use'],
+    'proc': assert_arity(about)}
 ]
 
 const parse = (msg:Discord.Message) => {
@@ -267,7 +290,7 @@ const parse = (msg:Discord.Message) => {
     const command = commands[table.indexOf(closest)]
 
     log_info(`Processing the message as '${command.names[0]}'-alike.`)
-    command.proc(msg, code != null ? code[1] : undefined)
+    command.proc(msg, code != null ? code[1] || code[2] : undefined)
 }
 
 client.on('ready', () => 
