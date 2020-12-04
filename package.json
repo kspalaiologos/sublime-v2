@@ -5,7 +5,8 @@
   "main": "index.ts",
   "scripts": {
     "build": "tsc",
-    "start": "tsc && node build"
+    "start": "tsc && node build",
+    "lint": "eslint --ignore-path .gitignore ."
   },
   "keywords": [
     "asm2bf",
@@ -21,16 +22,18 @@
     "@types/node": "^14.14.10",
     "@types/temp": "^0.8.34",
     "@types/ws": "^7.4.0",
-    "@typescript-eslint/eslint-plugin": "^4.9.0",
-    "@typescript-eslint/parser": "^4.9.0",
     "chalk": "^4.1.0",
     "discord.js": "^12.5.1",
-    "eslint": "^7.14.0",
     "eslint-config-prettier": "^6.15.0",
     "eslint-plugin-prettier": "^3.1.4",
     "js-levenshtein": "^1.1.6",
     "prettier": "^2.2.1",
     "temp": "^0.9.4",
     "typescript": "^4.1.2"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.9.0",
+    "@typescript-eslint/parser": "^4.9.0",
+    "eslint": "^7.14.0"
   }
 }
