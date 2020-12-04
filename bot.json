@@ -1,0 +1,5 @@
+{
+  "token": "[maybe the bot is public domain, my token isn't.]",
+  "command_threshold": 12,
+  "message_attach_threshold": 300
+}

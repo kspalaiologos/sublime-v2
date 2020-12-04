@@ -1,0 +1,36 @@
+{
+  "name": "sublime",
+  "version": "0.0.1",
+  "description": "An asm2bf discord bot",
+  "main": "index.ts",
+  "scripts": {
+    "build": "tsc",
+    "start": "tsc && node build"
+  },
+  "keywords": [
+    "asm2bf",
+    "bot",
+    "discord",
+    "execution",
+    "playground"
+  ],
+  "author": "Kamila Szewczyk",
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "@types/js-levenshtein": "^1.1.0",
+    "@types/node": "^14.14.10",
+    "@types/temp": "^0.8.34",
+    "@types/ws": "^7.4.0",
+    "@typescript-eslint/eslint-plugin": "^4.9.0",
+    "@typescript-eslint/parser": "^4.9.0",
+    "chalk": "^4.1.0",
+    "discord.js": "^12.5.1",
+    "eslint": "^7.14.0",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "js-levenshtein": "^1.1.6",
+    "prettier": "^2.2.1",
+    "temp": "^0.9.4",
+    "typescript": "^4.1.2"
+  }
+}
